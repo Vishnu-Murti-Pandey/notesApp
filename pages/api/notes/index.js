@@ -1,10 +1,15 @@
 import dbConnect from "../../../Utils/dbConnect";
 import Note from '../../../models/Note'
 
-dbConnect();
-
 export default async (req, res) => {
-    const {method} = req;
+
+        console.log('Connecting to Mongo')
+        await dbConnect()
+
+        console.log('Connected to Mongo')
+        console.log('Creating Docs')
+
+        const {method} = req;
 
     switch(method) {
         case 'GET':
@@ -12,20 +17,24 @@ export default async (req, res) => {
                 const notes = await Note.find({});
                 res.status(200).json({success: true, data: notes})
             } catch(error) {
-                res.status(400).json({success: false});
+                console.log(error)
+                res.json({error})
             }
             break;
         case 'POST':
             try {
-                const note = await Note.create(req.body);
-                res.status(201).json({success: true, data: note})
+                const note = await Note.create(req.body)
+                console.log('Created Docs')
+                res.json({note})
             } catch(error) {
-                res.status(400).json({success: false});
+                console.log(error)
+                res.json({error})
             }
             break;
         default:
-            res.status(400).json({success: false});
+            console.log(error)
+            res.json({error})
             break;
     }
-} 
+}
 
