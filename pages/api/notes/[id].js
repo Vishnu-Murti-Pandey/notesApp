@@ -1,13 +1,15 @@
 import dbConnect from '../../../utils/dbConnect';
 import Note from '../../../models/Note';
 
-dbConnect();
-
 export default async (req, res) => {
-    const {
-        query: { id },
-        method
-    } = req;
+
+    console.log('Connecting to Mongo')
+    await dbConnect()
+
+    console.log('Connected to Mongo')
+    console.log('Creating Docs')
+
+    const { query: { id }, method } = req;
 
     switch (method) {
         case 'GET':
@@ -20,7 +22,8 @@ export default async (req, res) => {
 
                 res.status(200).json({ success: true, data: note });
             } catch (error) {
-                res.status(400).json({ success: false });
+                console.log(error)
+                res.json({error})
             }
             break;
         case 'PUT':
@@ -36,7 +39,8 @@ export default async (req, res) => {
 
                 res.status(200).json({ success: true, data: note });
             } catch (error) {
-                res.status(400).json({ success: false });
+                console.log(error)
+                res.json({error})
             }
             break;
         case 'DELETE':
@@ -49,11 +53,16 @@ export default async (req, res) => {
 
                 res.status(200).json({ success: true, data: {} });
             } catch (error) {
-                res.status(400).json({ success: false })
+                console.log(error)
+                res.json({error})
             }
             break;
         default:
-            res.status(400).json({ success: false })
+            console.log(error)
+            res.json({error})
             break;
     }
 }
+
+
+
